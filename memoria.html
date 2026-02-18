@@ -7,58 +7,58 @@
 <style>
     body { font-family: system-ui; background:#f5f5f5; padding:20px; text-align:center; }
     h1 { margin-bottom:20px; }
-    #game { 
-        display:grid; 
-        grid-template-columns:repeat(4,1fr); 
-        gap:10px; 
-        max-width:600px; 
-        margin:0 auto; 
+    #game {
+        display:grid;
+        grid-template-columns:repeat(4,1fr);
+        gap:10px;
+        max-width:600px;
+        margin:0 auto;
     }
-    .card { 
-        background:white; 
-        border-radius:10px; 
-        height:120px; 
-        display:flex; 
-        align-items:center; 
-        justify-content:center; 
-        cursor:pointer; 
-        position:relative; 
-        transform-style:preserve-3d; 
-        transition:0.4s; 
+    .card {
+        background:white;
+        border-radius:10px;
+        height:120px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        cursor:pointer;
+        position:relative;
+        transform-style:preserve-3d;
+        transition:0.4s;
         font-size:18px;
         padding:10px;
     }
     .card.flipped { transform:rotateY(180deg); }
-    .front, .back { 
-        position:absolute; 
-        width:100%; 
-        height:100%; 
-        backface-visibility:hidden; 
-        display:flex; 
-        align-items:center; 
-        justify-content:center; 
-        border-radius:10px; 
+    .front, .back {
+        position:absolute;
+        width:100%;
+        height:100%;
+        backface-visibility:hidden;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        border-radius:10px;
         padding:10px;
     }
-    .front { 
-        background:#4caf50; 
-        color:white; 
-        font-size:26px; 
+    .front {
+        background:#4caf50;
+        color:white;
+        font-size:26px;
         font-weight:bold;
     }
-    .back { 
-        background:white; 
-        transform:rotateY(180deg); 
+    .back {
+        background:white;
+        transform:rotateY(180deg);
         color:#333;
     }
     .matched { visibility:hidden; }
-    #reset { 
-        margin-top:20px; 
-        padding:10px 20px; 
-        font-size:18px; 
-        border-radius:10px; 
-        background:#4caf50; 
-        color:white; 
+    #reset {
+        margin-top:20px;
+        padding:10px 20px;
+        font-size:18px;
+        border-radius:10px;
+        background:#4caf50;
+        color:white;
         border:none;
     }
 </style>
@@ -85,6 +85,8 @@ const pairs = [
 ];
 
 let cards = [];
+let flipped = [];
+let lock = false;
 
 function initGame() {
     const game = document.getElementById("game");
@@ -99,7 +101,7 @@ function initGame() {
 
     deck.sort(() => Math.random() - 0.5);
 
-    deck.forEach((cardData) => {
+    deck.forEach(cardData => {
         const card = document.createElement("div");
         card.className = "card";
         card.dataset.id = cardData.id;
@@ -122,9 +124,6 @@ function initGame() {
     });
 }
 
-let flipped = [];
-let lock = false;
-
 function flipCard(card) {
     if (lock || card.classList.contains("flipped")) return;
 
@@ -133,7 +132,7 @@ function flipCard(card) {
 
     if (flipped.length === 2) {
         lock = true;
-        setTimeout(checkMatch, 800);
+        setTimeout(checkMatch, 700);
     }
 }
 
