@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Igaz / Hamis – Liliennek</title>
+<style>
+    body { font-family: system-ui; background:#f5f5f5; padding:20px; text-align:center; }
+    h1 { margin-bottom:20px; }
+    #question { font-size:22px; margin:20px 0; }
+    button { padding:15px 25px; font-size:20px; margin:10px; border-radius:10px; }
+    #result { margin-top:20px; font-size:22px; font-weight:bold; }
+</style>
+</head>
+<body>
+
+<h1>Igaz / Hamis – Liliennek</h1>
+
+<div id="question"></div>
+<button onclick="answer(true)">IGAZ</button>
+<button onclick="answer(false)">HAMIS</button>
+
+<div id="result"></div>
+
+<script>
+const questions = [
+    { q:"A halak kopoltyúval lélegeznek.", a:true },
+    { q:"A madaraknak négy lábuk van.", a:false },
+    { q:"A gyökér rögzíti a növényt.", a:true },
+    { q:"A csuka növényevő hal.", a:false },
+    { q:"Az emlősök élve születnek.", a:true },
+    { q:"A fészeklakó fiókák azonnal önállóak.", a:false },
+    { q:"A virág a növény szaporító szerve.", a:true },
+    { q:"A ponty ragadozó hal.", a:false },
+    { q:"A levelekben készül a növény tápláléka.", a:true },
+    { q:"A madarak tollal borítottak.", a:true },
+    { q:"A halaknak van nyakuk.", a:false },
+    { q:"A gyökér fotoszintetizál.", a:false },
+    { q:"A gólya vándormadár.", a:true },
+    { q:"A vízi emlősök kopoltyúval lélegeznek.", a:false },
+    { q:"A termés magokat tartalmaz.", a:true },
+    { q:"A róka növényevő.", a:false },
+    { q:"A fecske rovarokat eszik.", a:true },
+    { q:"A növényeknek nincs szükségük fényre.", a:false },
+    { q:"A harcsa ragadozó.", a:true },
+    { q:"A levegő életfeltétel.", a:true }
+];
+
+let index = 0;
+let score = 0;
+
+function showQuestion() {
+    document.getElementById("question").textContent = questions[index].q;
+}
+
+function answer(val) {
+    if (val === questions[index].a) score++;
+    index++;
+
+    if (index < questions.length) {
+        showQuestion();
+    } else {
+        const percent = Math.round((score / questions.length) * 100);
+        document.getElementById("result").textContent =
+            `Eredmény: ${score} / ${questions.length} (${percent}%)`;
+        document.getElementById("question").textContent = "Kész vagy!";
+    }
+}
+
+showQuestion();
+</script>
+
+</body>
+</html>
