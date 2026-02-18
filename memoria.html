@@ -3,40 +3,85 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Képes memóriajáték – Liliennek</title>
+<title>Szöveges memóriajáték – Liliennek</title>
 <style>
     body { font-family: system-ui; background:#f5f5f5; padding:20px; text-align:center; }
     h1 { margin-bottom:20px; }
-    #game { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; max-width:600px; margin:0 auto; }
-    .card { background:white; border-radius:10px; height:120px; display:flex; align-items:center; justify-content:center; cursor:pointer; position:relative; transform-style:preserve-3d; transition:0.4s; }
-    .card img { width:80px; height:80px; object-fit:contain; }
+    #game { 
+        display:grid; 
+        grid-template-columns:repeat(4,1fr); 
+        gap:10px; 
+        max-width:600px; 
+        margin:0 auto; 
+    }
+    .card { 
+        background:white; 
+        border-radius:10px; 
+        height:120px; 
+        display:flex; 
+        align-items:center; 
+        justify-content:center; 
+        cursor:pointer; 
+        position:relative; 
+        transform-style:preserve-3d; 
+        transition:0.4s; 
+        font-size:18px;
+        padding:10px;
+    }
     .card.flipped { transform:rotateY(180deg); }
-    .front, .back { position:absolute; width:100%; height:100%; backface-visibility:hidden; display:flex; align-items:center; justify-content:center; border-radius:10px; }
-    .front { background:#4caf50; color:white; font-size:24px; }
-    .back { background:white; transform:rotateY(180deg); padding:5px; }
+    .front, .back { 
+        position:absolute; 
+        width:100%; 
+        height:100%; 
+        backface-visibility:hidden; 
+        display:flex; 
+        align-items:center; 
+        justify-content:center; 
+        border-radius:10px; 
+        padding:10px;
+    }
+    .front { 
+        background:#4caf50; 
+        color:white; 
+        font-size:26px; 
+        font-weight:bold;
+    }
+    .back { 
+        background:white; 
+        transform:rotateY(180deg); 
+        color:#333;
+    }
     .matched { visibility:hidden; }
-    #reset { margin-top:20px; padding:10px 20px; font-size:18px; }
+    #reset { 
+        margin-top:20px; 
+        padding:10px 20px; 
+        font-size:18px; 
+        border-radius:10px; 
+        background:#4caf50; 
+        color:white; 
+        border:none;
+    }
 </style>
 </head>
 <body>
 
-<h1>Képes memóriajáték – Liliennek</h1>
+<h1>Szöveges memóriajáték – Liliennek</h1>
 
 <div id="game"></div>
 <button id="reset">Újrakeverés</button>
 
 <script>
 const pairs = [
-    { img:"https://i.imgur.com/4ZQZ4yP.png", text:"Emlős" },
-    { img:"https://i.imgur.com/8qYp8Qm.png", text:"Madár" },
-    { img:"https://i.imgur.com/1q0pZ8Q.png", text:"Hal" },
-    { img:"https://i.imgur.com/8x5jYvV.png", text:"Csuka – ragadozó" },
-    { img:"https://i.imgur.com/8c4mQ9L.png", text:"Gyökér – rögzít" },
-    { img:"https://i.imgur.com/3xq9X7p.png", text:"Levél – táplálékkészítés" },
-    { img:"https://i.imgur.com/8tq3Y8G.png", text:"Virág – szaporodás" },
-    { img:"https://i.imgur.com/7xq8Y9H.png", text:"Amur – növényevő" },
-    { img:"https://i.imgur.com/6q8Y7pL.png", text:"Ponty – mindenevő" },
-    { img:"https://i.imgur.com/5xq8Y6K.png", text:"Légzés" }
+    { a:"Emlős", b:"Szőr borítja" },
+    { a:"Madár", b:"Toll borítja" },
+    { a:"Hal", b:"Pikkely borítja" },
+    { a:"Csuka", b:"Ragadozó hal" },
+    { a:"Gyökér", b:"Rögzíti a növényt" },
+    { a:"Levél", b:"Táplálékot készít" },
+    { a:"Virág", b:"Szaporító szerv" },
+    { a:"Amur", b:"Növényevő hal" },
+    { a:"Ponty", b:"Mindenevő hal" },
+    { a:"Légzés", b:"Levegő felvétele" }
 ];
 
 let cards = [];
@@ -48,17 +93,16 @@ function initGame() {
 
     let deck = [];
     pairs.forEach((p, i) => {
-        deck.push({ id:i, type:"img", value:p.img });
-        deck.push({ id:i, type:"text", value:p.text });
+        deck.push({ id:i, text:p.a });
+        deck.push({ id:i, text:p.b });
     });
 
     deck.sort(() => Math.random() - 0.5);
 
-    deck.forEach((cardData, index) => {
+    deck.forEach((cardData) => {
         const card = document.createElement("div");
         card.className = "card";
         card.dataset.id = cardData.id;
-        card.dataset.type = cardData.type;
 
         const front = document.createElement("div");
         front.className = "front";
@@ -66,14 +110,7 @@ function initGame() {
 
         const back = document.createElement("div");
         back.className = "back";
-
-        if (cardData.type === "img") {
-            const img = document.createElement("img");
-            img.src = cardData.value;
-            back.appendChild(img);
-        } else {
-            back.textContent = cardData.value;
-        }
+        back.textContent = cardData.text;
 
         card.appendChild(front);
         card.appendChild(back);
@@ -103,7 +140,7 @@ function flipCard(card) {
 function checkMatch() {
     const [a, b] = flipped;
 
-    if (a.dataset.id === b.dataset.id && a.dataset.type !== b.dataset.type) {
+    if (a.dataset.id === b.dataset.id) {
         a.classList.add("matched");
         b.classList.add("matched");
     } else {
